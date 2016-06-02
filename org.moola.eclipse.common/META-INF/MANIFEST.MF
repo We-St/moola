@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Common Libraries for Moola Eclipse Plug-ins
+Bundle-SymbolicName: org.moola.eclipse.common;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: eu.artist.moola.eclipse.common.Activator
+Import-Package: org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: libs/org.moola.core.jar,
+ .
+Export-Package: org.moola,
+ org.moola.dsl.ast,
+ org.moola.dsl.core,
+ org.moola.dsl.core.impl,
+ org.moola.logging,
+ org.moola.logging.impl,
+ org.moola.phases.config,
+ org.moola.phases.exec,
+ org.moola.plugin,
+ org.moola.plugin.standard,
+ org.moola.util

@@ -1,0 +1,43 @@
+
+apply plugin: 'eclipse'
+apply plugin: 'groovy'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy-all:2.4.4'
+	compile 'org.codehaus.gpars:gpars:1.2.1'
+	compile 'org.apache.commons:commons-lang3:3.0'
+
+	
+	testCompile "junit:junit:4+"
+}
+
+
+jar {
+	version =  '0.1.0'
+	
+	  from {
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+	  }
+}
+
+ 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+tasks.withType(Test).each { task ->
+	task.enabled = false
+}
+
+task deploy(type: Copy) {
+	from jar.archivePath.getAbsolutePath()
+	into '../org.moola.eclipse.common/libs'
+	rename { "org.moola.core.jar" }
+}
+
+deploy.dependsOn build
+
+

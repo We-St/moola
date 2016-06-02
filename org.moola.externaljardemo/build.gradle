@@ -1,0 +1,27 @@
+
+apply plugin: 'eclipse'
+apply plugin: 'groovy'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.codehaus.groovy:groovy-all:2.4.3'
+	testCompile "junit:junit:4+"
+}
+
+jar {
+	version =  '0.1.0'
+}
+ 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task deploy(type: Copy) {
+	from jar.archivePath.getAbsolutePath()
+	into '../org.moola.core/src/test/resources/jarIntegration/mlibs'
+	rename { "org.moola.externaljardemo.jar" }
+}
+
+deploy.dependsOn build
