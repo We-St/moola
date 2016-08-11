@@ -14,7 +14,8 @@
 
 package org.moola.dsl.core
 
-import java.util.List;
+import java.util.List
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.moola.logging.ILogger
 import org.moola.logging.LoggerFactory
@@ -26,6 +27,7 @@ class Operation {
 
 	protected ILogger log
 	protected PathFactory pathFactory
+	protected LockFactory lockFactory
 	protected Signature signature
 	protected def outputs = [:]
 	protected def inputs = [:]
@@ -150,6 +152,52 @@ class Operation {
 	protected void prepareRun() { }
 	
 	/**
+	 * This method can be used to specify a list of resources that should be locked
+	 * before the operation is executed. The locks will be released after
+	 * the operation has finished.
+	 */
+	protected List<Object> getResourcesToLock() { 
+		return []
+	}
+	
+	/**
+	 * Retrieves an ordered list of locks for the shared resources in this operation.
+	 * @return An ordered list of locks.
+	 */
+	protected List<Object> getLocks() {
+		def resources = this.getResourcesToLock()
+		if(resources == null || resources.size() == 0) {
+			return []
+		}
+		return this.lockFactory.getLocks(resources)
+	}
+	
+	/**
+	 * Acquires all locks in the order they are specified.
+	 * @param locks The list of locks to acquire.
+	 */
+	protected void acquireLocks(List<ReentrantLock> locks) {
+		for(ReentrantLock lock : locks) {
+			lock.lock()
+		}
+	}
+	
+	/**
+	 * Releases all locks in the order they are specified.
+	 * @param locks The list of locks to release.
+	 */
+	protected void releaseLocks(List<ReentrantLock> locks) {
+		for(ReentrantLock lock : locks) {
+			try {				
+				lock.unlock()
+			} catch(IllegalMonitorStateException ex) {
+				// Ignore this exception, since we work on list of locks. Be sure
+				// to unlock all locks before exiting from this method.
+			}
+		}
+	}
+	
+	/**
 	 * Runs the operation by executing all pre- and post-actions.
 	 * Execution order:
 	 * 1) pre-actions in order of their definition
@@ -159,18 +207,25 @@ class Operation {
 	public def run() {
 		this.prepareRun()
 		this.executePreActions()
-			
-		// execute work, if defined
-		if(work != null) {
-			work.delegate = this
-			work.resolveStrategy = Closure.DELEGATE_FIRST
-			work()
-		} else {
-			this.execute()
-		}
 		
-		this.executePostActions()
-		return this.assembleOutput()
+		def locks = this.getLocks()
+		try {
+			this.acquireLocks(locks)
+			
+			// execute work, if defined
+			if(work != null) {
+				work.delegate = this
+				work.resolveStrategy = Closure.DELEGATE_FIRST
+				work()
+			} else {
+				this.execute()
+			}
+			
+			this.executePostActions()
+			return this.assembleOutput()
+		} finally {
+			this.releaseLocks(locks)
+		}
 	}
 	
 	/**

@@ -48,8 +48,10 @@ class ScriptBase extends Script {
 	 * Applies the plugin with the given name to the current Moola process
 	 * @param pluginName The name of the plugin
 	 */
-	void apply(String pluginName){
-		process.applyPlugin(pluginName)
+	void plugins(String... plugins){
+		for(String plugin : plugins) {
+			process.applyPlugin(plugin)
+		}
 	}
 	
 	
@@ -102,7 +104,7 @@ class ScriptBase extends Script {
 	 * @param configClosure An optional closure used for configuration of the new trafo
 	 * @return An object representing the transformation
 	 */
-	def operation(args, @DelegatesTo(Operation) configClosure) {
+	void operation(args, @DelegatesTo(Operation) configClosure) {
 		def opType = new OperationType(this.process)
 		opType.name = args.name
 		opType.type = args.type
@@ -111,7 +113,7 @@ class ScriptBase extends Script {
 		process.registerOperationType(opType)
 	}
 	
-	def operation(args) {
+	void operation(args) {
 		this.operation(args, null)
 	}
 		

@@ -15,7 +15,8 @@ public class MoolaKeywordHighlighter implements IHighlightingExtender {
     public List<String> getAdditionalGroovyKeywords() {
         return Arrays.asList(
         	"modeltypes", "model", "operation", "expects", "returns",
-        	"before", "after", "task", "run", "parallel", "await"
+        	"before", "after", "task", "run", "parallel", "await",
+        	"plugins", "include", "from"
         );
     }
 

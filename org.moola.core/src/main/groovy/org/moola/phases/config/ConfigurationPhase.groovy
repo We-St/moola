@@ -7,8 +7,10 @@ import org.codehaus.groovy.control.CompilationFailedException
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.MultipleCompilationErrorsException
 import org.codehaus.groovy.control.customizers.ASTTransformationCustomizer
+import org.codehaus.groovy.control.CompilePhase
 
 import org.moola.dsl.ast.GenerateModelClassesTransformer
+import org.moola.dsl.ast.LoggingCompilationCustomizer
 import org.moola.dsl.ast.ModelNameTransformation
 import org.moola.dsl.ast.OperationNameTransformation
 import org.moola.dsl.ast.ScriptMerger
@@ -79,6 +81,7 @@ class ConfigurationPhase {
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new OperationNameTransformation()));
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new ScriptSeparator()));
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(TypeChecked, extensions:['typechecking/TypeCheckingExtension.groovy']));
+		//cc.addCompilationCustomizers(new LoggingCompilationCustomizer(CompilePhase.INSTRUCTION_SELECTION, System.out));
 	}
 	
 	private void gatherOrchestration(Process process, GroovyShell shell, CompilerConfiguration cc){
@@ -87,7 +90,7 @@ class ConfigurationPhase {
 		// HOWEVER, we need to reuse the same instance of CompilerConfiguration for the class loading to work
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new ScriptMerger()));
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new UnrollMultiAssignmentTransformation(process)));
-		//cc.addCompilationCustomizers(new LoggingCompilationCustomizer(CompilePhase.INSTRUCTION_SELECTION, System.out));
+		// cc.addCompilationCustomizers(new LoggingCompilationCustomizer(CompilePhase.INSTRUCTION_SELECTION, System.out));
 		
 		def scriptText =
 		""" // the whole closure should be overwritten by ScriptMerger

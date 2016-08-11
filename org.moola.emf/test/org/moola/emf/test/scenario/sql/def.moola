@@ -1,0 +1,25 @@
+plugins "EMF"
+
+
+// ---------- Model Types ---------- //
+
+modeltypes (
+	UML: "http://www.eclipse.org/uml2/5.0.0/UML",
+	DBModel: "../meta/dbmodel.ecore"
+)
+
+
+// ---------- Operations ----------- //
+
+operation GEN_DB_MODEL( type: "ATL/EMFTVM" ) {
+	expects UML
+	returns DBModel
+	path = "."
+	module = "SqlToDBModel"
+}
+
+operation GEN_SQL( type: "Acceleo" ) {
+	expects DBModel, String
+	project = "GenSQL"
+	main = "GenSQL.common.Generate"
+}

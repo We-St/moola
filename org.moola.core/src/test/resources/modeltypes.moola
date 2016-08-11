@@ -1,0 +1,45 @@
+
+
+// -------- TEST ------------ //
+
+modeltypes (
+	UML: "http://some.url",
+	Customer: "DefaultLocation.ecore"
+)
+
+model test( type: UML, path: "some/path/here" )
+
+// -------------------------- //
+
+
+
+run {
+	
+	println lockFactory.getLocks(["bla", test])
+	
+	promise = parallel ({
+		Thread.sleep(1);
+		
+		println lockFactory.getLocks(["bla", test, "a"])
+		
+		synchronized(test) {
+			println "a"	
+			println "b"
+		}
+	}, {
+	
+		println lockFactory.getLocks(["a", "bla", test])
+	
+		synchronized(test) {
+			println "y"	
+			println "w"
+		}
+	})
+	try {
+		await promise
+	} catch(Exception e) {
+		println e
+	}
+}
+
+

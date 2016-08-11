@@ -20,6 +20,9 @@ class ParallelResult {
 		threads.each { t -> t.join() }
 		
 		def exceptions = getThreadExceptions()
+		if(exceptions.size() == 1){
+			throw exceptions.get(0)
+		}
 		if(exceptions.size() > 0){
 			throw new ParallelExecutionException(exceptions)
 		}

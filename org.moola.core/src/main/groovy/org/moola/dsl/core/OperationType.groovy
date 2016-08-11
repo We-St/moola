@@ -23,6 +23,7 @@ class OperationType {
 		def operation = operationClass.newInstance()
 		operation.log = process.log
 		operation.pathFactory = process.pathFactory
+		operation.lockFactory = process.lockFactory
 		operation.name = this.name;
 		if(configClosure != null) {
 			operation.init(this.configClosure)

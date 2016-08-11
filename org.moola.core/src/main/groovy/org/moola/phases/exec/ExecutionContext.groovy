@@ -1,5 +1,6 @@
 package org.moola.phases.exec
 
+import org.moola.dsl.core.LockFactory
 import org.moola.dsl.core.Model
 import org.moola.dsl.core.ModelFactory
 import org.moola.dsl.core.PathFactory
@@ -10,6 +11,7 @@ class ExecutionContext {
 	Closure work
 	ILogger log
 	PathFactory pathFactory
+	LockFactory lockFactory
 	
 	public ExecutionContext(){ }
 	

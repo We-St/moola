@@ -26,6 +26,7 @@ import org.moola.phases.exec.ExecutionPhase;
 import org.moola.phases.exec.OperationExecutionException;
 import org.moola.phases.exec.ParallelExecutionException;
 import org.moola.plugin.Plugin
+import org.moola.dsl.core.LockFactory
 import org.moola.dsl.core.Model
 import org.moola.dsl.core.ModelFactory;
 import org.moola.dsl.core.Operation;
@@ -51,7 +52,8 @@ class Process {
 	OperationRegistry operationRegistry
 	ModelFactory modelFactory
 	PathFactory pathFactory
-	LoggerFactory loggerFactory;
+	LoggerFactory loggerFactory
+	LockFactory lockFactory
 	
 	protected ILogger log
 	protected ProcessSettings settings

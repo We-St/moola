@@ -13,6 +13,7 @@ class ExecutionContextFactory {
 		ExecutionContext context = new ExecutionContext()
 		context.work = process.orchestration
 		context.pathFactory = process.pathFactory
+		context.lockFactory = process.lockFactory
 		context.log = process.loggerFactory.create()
 				
 		// register models

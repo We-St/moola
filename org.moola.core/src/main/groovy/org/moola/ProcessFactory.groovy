@@ -3,6 +3,7 @@ package org.moola
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.moola.dsl.core.LockFactory
 import org.moola.dsl.core.impl.DefaultModelFactory;
 import org.moola.dsl.core.impl.DefaultPathFactory;
 import org.moola.dsl.core.impl.OperationRegistry;
@@ -60,6 +61,7 @@ class ProcessFactory {
 		process.setOperationRegistry(new OperationRegistry())
 		process.setModelFactory(new DefaultModelFactory())
 		process.setLoggerFactory(new LoggerFactory(outStream))
+		process.setLockFactory(new LockFactory())
 		
 		for(Plugin plugin : PluginRegistry.getDefaultPlugins()){
 			process.applyPlugin(plugin)
