@@ -13,6 +13,7 @@ import org.moola.dsl.ast.GenerateModelClassesTransformer
 import org.moola.dsl.ast.LoggingCompilationCustomizer
 import org.moola.dsl.ast.ModelNameTransformation
 import org.moola.dsl.ast.OperationNameTransformation
+import org.moola.dsl.ast.RewriteIncludeTransformation
 import org.moola.dsl.ast.ScriptMerger
 import org.moola.dsl.ast.ScriptSeparator
 import org.moola.dsl.ast.UnrollMultiAssignmentTransformation
@@ -69,13 +70,14 @@ class ConfigurationPhase {
 		TypeCheckSpace.setProcess(process) // share process with TypeChecked DSL
 		
 		ScriptBase script = (ScriptBase) shell.parse(process.scriptContent);
-		script.init(process)
+		script.init(process, shell.getClassLoader())
 		script.run()
 	}
 	
 	private CompilerConfiguration createCompilerConfiguration(){
 		CompilerConfiguration cc = new CompilerConfiguration();
 		cc.setScriptBaseClass("org.moola.phases.config.ScriptBase");
+		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new RewriteIncludeTransformation()));
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new GenerateModelClassesTransformer()));
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new ModelNameTransformation()));
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new OperationNameTransformation()));
@@ -90,7 +92,7 @@ class ConfigurationPhase {
 		// HOWEVER, we need to reuse the same instance of CompilerConfiguration for the class loading to work
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new ScriptMerger()));
 		cc.addCompilationCustomizers(new ASTTransformationCustomizer(new UnrollMultiAssignmentTransformation(process)));
-		// cc.addCompilationCustomizers(new LoggingCompilationCustomizer(CompilePhase.INSTRUCTION_SELECTION, System.out));
+		//cc.addCompilationCustomizers(new LoggingCompilationCustomizer(CompilePhase.INSTRUCTION_SELECTION, System.out));
 		
 		def scriptText =
 		""" // the whole closure should be overwritten by ScriptMerger
@@ -99,7 +101,7 @@ class ConfigurationPhase {
 			}
 		""";
 		ScriptBase script = (ScriptBase) shell.parse(scriptText);
-		script.init(process)
+		script.init(process, shell.getClassLoader())
 		script.run()
 	}
 

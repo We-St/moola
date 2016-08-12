@@ -32,7 +32,7 @@ unresolvedVariable { var ->
 	}
 		
 	if(!handled){
-		println "(type checking): " + var
+		// println "(type checking): " + var.getType()
 		storeType(var, classNodeFor(Object))
 		handled = true
 	}

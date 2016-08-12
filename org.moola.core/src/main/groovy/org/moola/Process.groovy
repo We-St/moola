@@ -131,7 +131,7 @@ class Process {
 			log.error(ex.getMessage())
 			throw ex
 		} catch(OperationExecutionException ex) {
-			log.error("An error occured during the execution of " + ex.getOperation().getName())
+			log.error("An error occured during the execution of " + ex.getOperation().name)
 			log.error(ex.getInner())
 			throw ex
 		} catch(ParallelExecutionException ex) {

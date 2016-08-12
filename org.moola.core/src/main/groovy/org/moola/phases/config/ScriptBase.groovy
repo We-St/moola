@@ -23,15 +23,21 @@ class ScriptBase extends Script {
 	protected def models = [:]
 	protected def operationTypes = [:]
 	
+	protected ClassLoader classLoader
+	
 	public ScriptBase() { }
 	
 	
 	/**
-	 * Initializes the ScriptBase instance with a Moola process
-	 * @param process
+	 * Initializes the ScriptBase instance with a Moola process and a
+	 * ClassLoader. The classLoader is used to call other Moola scripts,
+	 * e.g. when importing operations.
+	 * @param process The process
+	 * @param classLoader The class loader
 	 */
-	public void init(Process process){
+	public void init(Process process, ClassLoader classLoader){
 		this.process = process
+		this.classLoader = classLoader
 		this.proj = process.settings
 	}
 	
@@ -154,4 +160,8 @@ class ScriptBase extends Script {
 		return process.pathFactory.resolve(path)
 	}
 	
+	
+	OperationImporter from(String path) {
+		return new OperationImporter(path, this)
+	}
 }

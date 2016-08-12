@@ -1,0 +1,20 @@
+
+
+operation X () {
+	expects input: UML
+	returns output: UML, desc: String
+	task {
+		UML uml = getInput("input") as UML
+		emit "output", uml 
+		emit "desc", "Some desc of " + uml.toString()
+	}
+}
+
+
+operation SUM () {
+	expects a: Integer, b: Integer
+	returns result: Integer
+	task {
+		emit "result", (getInput("a") as Integer) + (getInput("b") as Integer)
+	}
+}

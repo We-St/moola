@@ -16,7 +16,7 @@ class ExecutionContextFactory {
 		context.lockFactory = process.lockFactory
 		context.log = process.loggerFactory.create()
 				
-		// register models
+		// Register models as properties.
 		def models = [:]
 		process.models.each { model ->
 			def propName = model.name.capitalize()
@@ -29,7 +29,7 @@ class ExecutionContextFactory {
 			}
 		}
 		
-		// register trafos
+		// Register operations as methods.
 		process.operationTypes.each { OperationType opType ->
 			def operationName = opType.name  		
 			context.metaClass."$operationName" = { ...args ->

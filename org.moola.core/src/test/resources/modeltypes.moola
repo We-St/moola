@@ -1,3 +1,4 @@
+from "./helper" include X, SUM
 
 
 // -------- TEST ------------ //
@@ -11,35 +12,23 @@ model test( type: UML, path: "some/path/here" )
 
 // -------------------------- //
 
+operation Y () {
+	returns test: String, output: Integer
+	task {
+		emit "test", "bla"
+		emit "output", 42
+	}
+}
+
 
 
 run {
+	(a, b) = X(new UML())
 	
-	println lockFactory.getLocks(["bla", test])
+	println a
+	println b
 	
-	promise = parallel ({
-		Thread.sleep(1);
-		
-		println lockFactory.getLocks(["bla", test, "a"])
-		
-		synchronized(test) {
-			println "a"	
-			println "b"
-		}
-	}, {
-	
-		println lockFactory.getLocks(["a", "bla", test])
-	
-		synchronized(test) {
-			println "y"	
-			println "w"
-		}
-	})
-	try {
-		await promise
-	} catch(Exception e) {
-		println e
-	}
+	println SUM(5, 10)
 }
 
 
